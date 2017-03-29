@@ -1,0 +1,24 @@
+version: '2'
+services: 
+  ipam_server:
+    build: .
+    image: lpfi/c_ipam
+    depends_on: 
+      - ipam_db
+    ports:
+      - "8080:4567"
+    environment: 
+      - MONGODB_HOST=ipam_db
+      - MONGODB_PORT=27017
+  ipam_db:
+    image: mongo
+  docker_driver:
+    image: lpfi/c_ipam-docker
+    depends_on: 
+      - ipam_server
+    environment: 
+      - IPAM_HOST=ipam_server
+      - IPAM_PORT=4567
+    volumes:
+      - /run/docker/plugins:/run/docker/plugins
+    
