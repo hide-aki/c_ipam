@@ -15,22 +15,22 @@ describe "address route" do
     block.save
 
     params = {
-        "cidr" => "10.0.0.0/24",
-        "block_id" => block["id"],
-        "start_address" => 167772160,
-        "end_address" => 167772415
+      "cidr" => "10.0.0.0/24",
+      "block_id" => block["id"],
+      "start_address" => 167772160,
+      "end_address" => 167772415
     }
     pool = Pool.new(params)
     pool.save
     
     post "/api/v1/addresses", { "pool_id": pool["id"].to_s }.to_json
     expect(last_response.status).to eq(201)
-    new_address = Address.where({cidr: "10.0.0.1"}).first()
+    new_address = Address.where({cidr: "10.0.0.1/32"}).first()
     expect(new_address).to be_instance_of(Address)
 
     post "/api/v1/addresses", { "pool_id": pool["id"].to_s }.to_json
     expect(last_response.status).to eq(201)
-    new_address = Address.where({cidr: "10.0.0.2"}).first()
+    new_address = Address.where({cidr: "10.0.0.2/32"}).first()
     expect(new_address).to be_instance_of(Address)
   end
 
